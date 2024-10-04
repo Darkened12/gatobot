@@ -1,3 +1,12 @@
+import sys
+from pathlib import Path
+
+# Add the app directory to the Python path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app.models.base_model import Base
+from app.models.gifs_model import GifsModel
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -19,6 +28,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = None
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
