@@ -18,7 +18,7 @@ class GifsController:
             await session.add(GifsModel(
                 url=gif,
                 weight=weight,
-                gif_name=f'{datetime.now()}_tenor-gif_{time.time()}',
+                gif_name=f'{datetime.now()}_tenor-gif_{time.time()}.gif',
                 created_at=datetime.now(),
                 added_by_user_id=user.id if user is not None else None
             ))
