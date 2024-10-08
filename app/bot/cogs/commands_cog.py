@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from datetime import datetime
 
 from app.controllers.gifs_controller import GifsController, AlreadyExistsError
 from app.services.logging_service import logger
@@ -9,6 +10,10 @@ class CommandsCog(discord.Cog):
     def __int__(self, bot: discord.Bot, gifs_controller: GifsController):
         self.bot = bot
         self.controller = gifs_controller
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        logger.info(f'Cog "{self.__cog_name__}" ready at "{datetime.now()}".')
 
     @commands.group(name='gif')
     async def gif_group(self, ctx: discord.ApplicationContext):
