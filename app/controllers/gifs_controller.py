@@ -4,7 +4,7 @@ from datetime import datetime
 
 from sqlalchemy import func
 from sqlalchemy.future import select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from app.models.gifs_model import GifsModel
 from app.services.database_service import DatabaseService
@@ -29,12 +29,15 @@ class GifsController:
             except IntegrityError:
                 raise AlreadyExistsError('this gif already exists.')
 
-    async def get_random_gif(self) -> GifsModel:
+    async def get_random_gif(self) -> Optional[GifsModel]:
         async with self.database_service.session() as session:
-            stmt = select(GifsModel).order_by(func.random()).limit(1)
-            result = await session.execute(stmt)
-            gif = result.scalars().first()
-            return gif
+            try:
+                stmt = select(GifsModel).order_by(func.random()).limit(1)
+                result = await session.execute(stmt)
+                gif = result.scalars().first()
+                return gif
+            except OperationalError:
+                return None
 
 
 class AlreadyExistsError(Exception):
