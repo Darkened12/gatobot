@@ -1,20 +1,18 @@
 import asyncio
-import os
 import discord
 from discord.ext import commands
 from datetime import datetime
 from app.bot.channels import CHANNELS, ChannelsModel
 
-from app.services.database_service import DatabaseService
 from app.services.logging_service import logger
 from app.controllers.gifs_controller import GifsController
 from app.services import randomizer_cat_service, parallel_task_runner_service
 
 
 class ListenersCog(commands.Cog):
-    def __init__(self, bot: discord.Bot):
+    def __init__(self, bot: discord.Bot, gifs_controller: GifsController):
         self.bot = bot
-        self.gifs_controller = GifsController(database_service=DatabaseService(os.environ.get('DATABASE_SECRET')))
+        self.gifs_controller = gifs_controller
 
     @commands.Cog.listener()
     async def on_ready(self):
