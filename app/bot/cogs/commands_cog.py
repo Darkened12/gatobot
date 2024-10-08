@@ -28,7 +28,7 @@ class CommandsCog(commands.Cog):
             await ctx.respond(f"Gif {url} added!", ephemeral=True)
             return logger.info(f'user "{ctx.author}" added the gif "{url}".')
         except AlreadyExistsError:
-            await ctx.respond(f"Error! Either the gif already exists or something else happened!")
+            await ctx.respond(f"Error! Either the gif already exists or something else happened!", ephemeral=True)
             return logger.error(f'error {AlreadyExistsError} ocurred while executing command "add" - user: {ctx.author}'
                                 f' gif: {url}')
 
