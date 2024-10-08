@@ -18,7 +18,7 @@ class GifsController:
     async def add_gif(self, gif: str, user: Optional[discord.User], weight: int = 5):
         async with self.database_service.session() as session:
             try:
-                await session.add(GifsModel(
+                session.add(GifsModel(
                     url=gif,
                     weight=weight,
                     gif_name=f'{datetime.now()}_tenor-gif_{time.time()}.gif',
@@ -27,6 +27,7 @@ class GifsController:
                 ))
                 await session.commit()
             except IntegrityError:
+                await session.rollback()
                 raise AlreadyExistsError('this gif already exists.')
 
     async def get_random_gif(self) -> Optional[GifsModel]:
