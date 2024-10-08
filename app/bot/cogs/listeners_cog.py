@@ -33,13 +33,15 @@ class ListenersCog(commands.Cog):
 
         if self.bot.user in message.mentions:
             cat = await randomizer_cat_service.get_random_cat(self.gifs_controller)
-            return await message.reply(cat)
+            await message.reply(cat)
+            return logger.info(f'sent "{cat}" to user "{message.author}".')
 
         if message.reference:
             original_message = await message.channel.fetch_message(message.reference.message_id)
             if self.bot.user in original_message.mentions:
                 cat = await randomizer_cat_service.get_random_cat(self.gifs_controller)
-                return await message.reply(cat)
+                await message.reply(cat)
+                return logger.info(f'sent "{cat}" to user "{message.author}".')
 
     async def __cat_sender(self, channel_model: ChannelsModel):
         channel = self.bot.get_channel(channel_model.id)
