@@ -32,3 +32,11 @@ class CommandsCog(commands.Cog):
             return logger.error(f'error {AlreadyExistsError} ocurred while executing command "add" - user: {ctx.author}'
                                 f' gif: {url}')
 
+    @add_gif.error
+    async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
+        if isinstance(error, commands.NotOwner):
+            await ctx.respond("Sorry, only the bot owner can use this command.", ephemeral=True)
+            logger.warning(f'User "{ctx.author.display_name}" tried to use the command "gif add".')
+        else:
+            logger.error(f'Exception occurred - {error}')
+            raise error
