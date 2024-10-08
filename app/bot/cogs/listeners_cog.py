@@ -28,7 +28,18 @@ class ListenersCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        pass
+        if message.author == self.bot.user:
+            return
+
+        if self.bot.user in message.mentions:
+            cat = await randomizer_cat_service.get_random_cat(self.gifs_controller)
+            return await message.reply(cat)
+
+        if message.reference:
+            original_message = await message.channel.fetch_message(message.reference.message_id)
+            if self.bot.user in original_message.mentions:
+                cat = await randomizer_cat_service.get_random_cat(self.gifs_controller)
+                return await message.reply(cat)
 
     async def __cat_sender(self, channel_model: ChannelsModel):
         channel = self.bot.get_channel(channel_model.id)
