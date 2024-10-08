@@ -3,7 +3,7 @@ import os
 import discord
 from discord.ext import commands
 from datetime import datetime
-from .channels import CHANNELS, ChannelsModel
+from app.bot.channels import CHANNELS, ChannelsModel
 
 from app.services.database_service import DatabaseService
 from app.services.logging_service import logger
