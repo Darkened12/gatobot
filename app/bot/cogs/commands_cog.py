@@ -8,23 +8,17 @@ from app.services.logging_service import logger
 
 
 class CommandsCog(commands.Cog):
-    def __int__(self, bot: discord.Bot, gifs_controller: GifsController):
+    def __init__(self, bot: discord.Bot, gifs_controller: GifsController):
         self.bot = bot
         self.controller = gifs_controller
 
     gif_group = SlashCommandGroup('gif', 'gato', checks=[commands.is_owner()])
-    gif_add = gif_group.create_subgroup('add')
 
     @commands.Cog.listener()
     async def on_ready(self):
         logger.info(f'Cog "{self.__cog_name__}" ready at "{datetime.now()}".')
 
-    @gif_group.command()
-    async def gif_group(self, ctx: discord.ApplicationContext):
-        await ctx.respond('Available subcommads: add', ephemeral=True)
-        return logger.info(f'user "{ctx.author}" used command "gif".')
-
-    @gif_add.command(description='adds a gif to the gato database')
+    @gif_group.command(name='add', description='adds a gif to the gato database')
     async def add_gif(self, ctx: discord.ApplicationContext, url: str):
         try:
             await self.controller.add_gif(

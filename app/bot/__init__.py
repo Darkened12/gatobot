@@ -12,7 +12,7 @@ __load_dotenv()
 __intents = discord.Intents.default()
 __intents.messages = True
 
-bot = discord.Bot(intents=__intents, owner_id=os.environ.get('OWNER_ID'))
+bot = discord.Bot(intents=__intents, owner_id=int(os.environ.get('OWNER_ID')))
 __database = DatabaseService(dsn_connector='sqlite+aiosqlite:///', dsn=os.environ.get('DATABASE'))
 __controller = GifsController(__database)
 
