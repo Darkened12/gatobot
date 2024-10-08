@@ -10,7 +10,7 @@ from app.models.base_model import Base
 class DatabaseService:
     Base = Base
 
-    def __init__(self, dsn: str, dsn_connector: str = 'postgresql+asyncpg://', new_database: bool = False):
+    def __init__(self, dsn: str, dsn_connector: str, new_database: bool = False):
         self.dsn_connector = dsn_connector
         self.dsn = self.dsn_connector + dsn
         self.new_database = new_database

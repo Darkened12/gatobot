@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 from sqlalchemy import func
+from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError
 
 from app.models.gifs_model import GifsModel
@@ -30,7 +31,9 @@ class GifsController:
 
     async def get_random_gif(self) -> GifsModel:
         async with self.database_service.session() as session:
-            gif = await session.query(GifsModel).order_by(func.random()).first()
+            stmt = select(GifsModel).order_by(func.random()).limit(1)
+            result = await session.execute(stmt)
+            gif = result.scalars().first()
             return gif
 
 
