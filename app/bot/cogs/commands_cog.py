@@ -12,7 +12,7 @@ class CommandsCog(commands.Cog):
         self.bot = bot
         self.controller = gifs_controller
 
-    gif_group = SlashCommandGroup('gif', 'gato', checks=[commands.is_owner()])
+    gif_group = SlashCommandGroup('gif', 'gato')
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -34,9 +34,10 @@ class CommandsCog(commands.Cog):
 
     @add_gif.error
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
-        if isinstance(error, commands.NotOwner):
-            await ctx.respond("Sorry, only the bot owner can use this command.", ephemeral=True)
-            logger.warning(f'User "{ctx.author.display_name}" tried to use the command "gif add".')
-        else:
-            logger.error(f'Exception occurred - {error}')
+        # if isinstance(error, commands.NotOwner):
+        #     await ctx.respond("Sorry, only the bot owner can use this command.", ephemeral=True)
+        #     logger.warning(f'User "{ctx.author.display_name}" tried to use the command "gif add".')
+        # else:
+            logger.error(f'Exception occurred - "{error}" : user "{ctx.author.display_name}".')
+            await ctx.respond('An unknown error occurred.', ephemeral=True)
             raise error
