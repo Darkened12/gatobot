@@ -5,24 +5,24 @@ from app.bot.channels import CHANNELS
 from app.services.logging_service import logger
 
 keywords = {
-    "meow": "😺",
+    "meow": "<:gato:1180027630871904276>",
     "ronronar": "😸",
-    "feliz": "😊",
-    "triste": "😿",
+    "feliz": "<:gato:1180027630871904276>",
+    "triste": "<:gatodespair:1280387632492449946>",
     "brincar": "🐾",
-    "catnip": "😻",
+    "catnip": "<:gato:1180027630871904276>",
     "dormir": "💤",
-    "comida": "🍲",
+    "comida": "<:gato:1180027630871904276>",
     "caçar": "🐱‍👓",
     "arranhar": "😼",
-    "miado": "😽",
-    "miau": "😹",
-    "gatinho": "😺",
-    "gatona": "😽",
-    "gato": "😽",
-    "fofo": "😻",
-    "ronron": "😸",
-    "pet": "🐾",
+    "miado": "<:gato:1180027630871904276>",
+    "miau": "<:gato:1180027630871904276>",
+    "gatinho": "<:gato:1180027630871904276>",
+    "gatona": "<:gato:1180027630871904276>",
+    "gato": "<:gato:1180027630871904276>",
+    "fofo": "<:gato:1180027630871904276>",
+    "ronron": "<:gato:1180027630871904276>",
+    "pet": "<:gato:1180027630871904276>",
     "fudeu": '<:gatodespair:1280387632492449946>',
     "perdemo": '<:gatodespair:1280387632492449946>',
     "perdi": '<:gatodespair:1280387632492449946>',
@@ -50,8 +50,11 @@ class ReactToMessagesCog(discord.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
-        if reaction.message.channel.id in self.allowed_channels:
-            if reaction.emoji.id in [1280387632492449946, 1180027630871904276]:
-                await reaction.message.add_reaction(reaction.emoji)
-                return logger.info(f'added reaction "{reaction.emoji}" on "{reaction.message.channel.name}" channel'
-                                   f' on message "{reaction.message.content}".')
+        if reaction.message.channel.id in self.allowed_channels and not reaction.burst:
+            try:
+                if reaction.emoji.id in [1280387632492449946, 1180027630871904276]:
+                    await reaction.message.add_reaction(reaction.emoji)
+                    return logger.info(f'added reaction "{reaction.emoji}" on "{reaction.message.channel.name}" channel'
+                                       f' on message "{reaction.message.content}".')
+            except AttributeError:
+                pass
