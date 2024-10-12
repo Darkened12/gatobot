@@ -1,7 +1,7 @@
 .idea/
 .env
 *.db
-*.bat
 
 /*.py
 !main.py
+!run_with_tray.py
