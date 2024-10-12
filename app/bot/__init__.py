@@ -12,6 +12,7 @@ from app.bot.cogs.commands_cog import CommandsCog
 __load_dotenv()
 __intents = discord.Intents.default()
 __intents.messages = True
+__intents.reactions = True
 
 bot = discord.Bot(intents=__intents, owner_id=int(os.environ.get('OWNER_ID')))
 __database = DatabaseService(dsn_connector='sqlite+aiosqlite:///', dsn=os.environ.get('DATABASE'))
