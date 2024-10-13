@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, VARCHAR
 from sqlalchemy.orm import relationship
 
-from base_model import Base
-from links_keywords_association_model import LinksKeywordsAssociation
+from .base_model import Base
+from .links_keywords_association_model import LinksKeywordsAssociation
 
 
 class KeywordsModel(Base):
