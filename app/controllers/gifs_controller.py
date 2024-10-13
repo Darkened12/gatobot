@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 
-from app.models.gifs_model import GifsModel
+from app.models.links_model import LinksModel
 from app.services.database_service import DatabaseService
 from typing import Optional
 
@@ -18,7 +18,7 @@ class GifsController:
     async def add_gif(self, gif: str, user: Optional[discord.User], weight: int = 5):
         async with self.database_service.session() as session:
             try:
-                session.add(GifsModel(
+                session.add(LinksModel(
                     url=gif,
                     weight=weight,
                     gif_name=f'{datetime.now()}_tenor-gif_{time.time()}.gif',
@@ -30,10 +30,10 @@ class GifsController:
                 await session.rollback()
                 raise AlreadyExistsError('this gif already exists.')
 
-    async def get_random_gif(self) -> Optional[GifsModel]:
+    async def get_random_gif(self) -> Optional[LinksModel]:
         async with self.database_service.session() as session:
             try:
-                stmt = select(GifsModel).order_by(func.random()).limit(1)
+                stmt = select(LinksModel).order_by(func.random()).limit(1)
                 result = await session.execute(stmt)
                 gif = result.scalars().first()
                 return gif

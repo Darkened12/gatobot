@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 # necessary to import everything so the Base registers.
-from app.models.gifs_model import GifsModel
+from app.models.links_model import LinksModel
 from app.models.base_model import Base
 
 
