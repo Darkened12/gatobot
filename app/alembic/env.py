@@ -24,6 +24,8 @@ from models.base_model import Base
 from models.keywords_model import KeywordsModel
 from models.links_keywords_association_model import LinksKeywordsAssociation
 from models.links_model import LinksModel
+from models.emojis_keywords_association_model import EmojisKeywordsAssociation
+from models.emojis_model import EmojisModel
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
