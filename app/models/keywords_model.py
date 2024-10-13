@@ -7,6 +7,7 @@ from .base_model import Base
 from .links_keywords_association_model import LinksKeywordsAssociation
 from .emojis_keywords_association_model import EmojisKeywordsAssociation
 
+
 class KeywordsModel(Base):
     __tablename__ = 'keywords'
 
