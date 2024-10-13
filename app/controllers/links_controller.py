@@ -11,7 +11,7 @@ from app.services.database_service import DatabaseService
 from typing import Optional
 
 
-class GifsController:
+class LinksController:
     def __init__(self, database_service: DatabaseService):
         self.database_service = database_service
 

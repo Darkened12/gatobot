@@ -1,11 +1,11 @@
 import random
-from app.controllers.gifs_controller import GifsController
+from app.controllers.links_controller import LinksController
 
 _EMOJIS: list[str] = ['<:gato:1180027630871904276>',
                       '<:gatodespair:1280387632492449946>', ]
 
 
-async def get_random_cat(controller: GifsController) -> str:
+async def get_random_cat(controller: LinksController) -> str:
     gif = await controller.get_random_gif()
     if gif is not None:
         result = _EMOJIS.copy()

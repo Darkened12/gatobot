@@ -5,12 +5,12 @@ from datetime import datetime
 from app.bot.channels import CHANNELS, ChannelsModel
 
 from app.services.logging_service import logger
-from app.controllers.gifs_controller import GifsController
+from app.controllers.links_controller import LinksController
 from app.services import randomizer_cat_service, parallel_task_runner_service
 
 
 class ListenersCog(commands.Cog):
-    def __init__(self, bot: discord.Bot, gifs_controller: GifsController):
+    def __init__(self, bot: discord.Bot, gifs_controller: LinksController):
         self.bot = bot
         self.gifs_controller = gifs_controller
 

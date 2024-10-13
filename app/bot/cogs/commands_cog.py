@@ -3,12 +3,12 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 from datetime import datetime
 
-from app.controllers.gifs_controller import GifsController, AlreadyExistsError
+from app.controllers.links_controller import LinksController, AlreadyExistsError
 from app.services.logging_service import logger
 
 
 class CommandsCog(commands.Cog):
-    def __init__(self, bot: discord.Bot, gifs_controller: GifsController):
+    def __init__(self, bot: discord.Bot, gifs_controller: LinksController):
         self.bot = bot
         self.controller = gifs_controller
 
