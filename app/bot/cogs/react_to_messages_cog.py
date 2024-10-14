@@ -14,6 +14,7 @@ class ReactToMessagesCog(discord.Cog):
     def __init__(self, bot: discord.Bot, keywords_controller: KeywordsController,
                  emoji_controller: EmojisController, links_controller: LinksController):
         self.bot = bot
+        self.database = keywords_controller.database
         self.kw_controller = keywords_controller
         self.emoji_controller = emoji_controller
         self.links_controller = links_controller
@@ -24,6 +25,8 @@ class ReactToMessagesCog(discord.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        await self.database.init()
+        logger.info(f'Database is ready.')
         self.keywords = await self.kw_controller.get_all_keywords()
         logger.info(f'cog "{self.__cog_name__}" ready.')
 
