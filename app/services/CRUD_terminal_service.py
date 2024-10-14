@@ -101,7 +101,7 @@ async def page_two(emojis_controller: EmojisController):
 async def page_three(links_controller: LinksController):
     while True:
         clear_screen()
-        print('Emoji name:')
+        print('URL name:')
         input_text = input('> ')
         await links_controller.add_link(input_text)
         while True:
