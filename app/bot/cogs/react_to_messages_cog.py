@@ -35,7 +35,7 @@ class ReactToMessagesCog(discord.Cog):
     async def on_message(self, message: discord.Message):
         if self.bot.is_ready():
             if message.author != self.bot.user and message.channel.id in self.allowed_channels:
-                if self.bot.user.mention in message.mentions:
+                if self.bot.user in message.mentions:
                     return await self._react_to_mention(message)
 
                 return await self._react_to_message(message)
