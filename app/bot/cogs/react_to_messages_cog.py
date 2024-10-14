@@ -1,5 +1,6 @@
 import random
 import discord
+import asyncio
 from discord.ext import commands
 from typing import Union, List
 from app.bot.channels import CHANNELS
@@ -20,7 +21,7 @@ class ReactToMessagesCog(discord.Cog):
         self.links_controller = links_controller
         self.cooldown_service_reactions = CooldownService(120)
         self.cooldown_service_users = CooldownService(15)
-        self.allowed_channels = [channel.id for channel in CHANNELS]
+        self.allowed_channels = [channel for channel in CHANNELS]
         self.keywords: List[str] = []
 
     @commands.Cog.listener()
@@ -66,24 +67,33 @@ class ReactToMessagesCog(discord.Cog):
                     return logger.warn(f'Cooldown service [reactions]: still in cooldown - "{keyword}".')
 
     async def _action_chooser(self, message: discord.Message, keyword: str):
-        actions = ['action1', 'action2']
-        weights = [70, 30]  # 70% for action1, 30% for action2
-        chosen_action = random.choices(actions, weights=weights, k=1)[0]
+        is_keyword_in_emojis = await self.emoji_controller.is_keyword_in_model(keyword)
+        is_keyword_in_links = await self.links_controller.is_keyword_in_model(keyword)
 
-        if chosen_action == 'action1':
+        if is_keyword_in_links and is_keyword_in_emojis:
+            actions = ['action1', 'action2']
+            weights = [70, 30]  # 70% for action1, 30% for action2
+            chosen_action = random.choices(actions, weights=weights, k=1)[0]
+
+            if chosen_action == 'action1':
+                return await self._reply_with_random_link(message, keyword)
+            if chosen_action == 'action2':
+                return await self._react_with_random_emoji(message, keyword)
+        if is_keyword_in_links:
             return await self._reply_with_random_link(message, keyword)
-        if chosen_action == 'action2':
+        if is_keyword_in_emojis:
             return await self._react_with_random_emoji(message, keyword)
 
     async def _reply_with_random_link(self, message: discord.Message, keyword: str):
-        try:
-            link = await self.links_controller.get_random_link_by_keyword(keyword)
-        except ValueError:
-            return
-
-        await message.reply(link.url, mention_author=False)
-        return logger.info(f'triggered keyword reaction "{keyword}" on "{message.channel.name}" channel'
-                           f' on message "{message.content}".')
+        async with message.channel.typing():
+            try:
+                link = await self.links_controller.get_random_link_by_keyword(keyword)
+            except ValueError:
+                return
+            await asyncio.sleep(1)
+            await message.reply(link.url, mention_author=False)
+            return logger.info(f'triggered keyword reaction "{keyword}" on "{message.channel.name}" channel'
+                               f' on message "{message.content}".')
 
     async def _react_with_random_emoji(self, message: discord.Message, keyword: str):
         try:
