@@ -71,13 +71,21 @@ class ReactToMessagesCog(discord.Cog):
             return await self._react_with_random_emoji(message, keyword)
 
     async def _reply_with_random_link(self, message: discord.Message, keyword: str):
-        link = await self.links_controller.get_random_link_by_keyword(keyword)
+        try:
+            link = await self.links_controller.get_random_link_by_keyword(keyword)
+        except ValueError:
+            return
+
         await message.reply(link.url, mention_author=False)
         return logger.info(f'triggered keyword reaction "{keyword}" on "{message.channel.name}" channel'
                            f' on message "{message.content}".')
 
     async def _react_with_random_emoji(self, message: discord.Message, keyword: str):
-        emoji = await self.emoji_controller.get_random_emoji_by_keyword(keyword)
+        try:
+            emoji = await self.emoji_controller.get_random_emoji_by_keyword(keyword)
+        except ValueError:
+            return
+
         await message.add_reaction(emoji.emoji_name)
         return logger.info(f'triggered keyword reaction "{keyword}" on "{message.channel.name}" channel'
                            f' on message "{message.content}".')
