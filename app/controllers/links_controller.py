@@ -23,14 +23,14 @@ class LinksController:
 
     async def is_keyword_in_model(self, keyword: str) -> bool:
         async with self.database_service.session() as session:
-            async with session.begin():
-                query = (
-                    session.query(LinksModel.keywords)
-                    .join(LinksModel.keywords)
-                    .filter(KeywordsModel.keyword == keyword)
-                )
-                result = await query.all()
-                return len(result) > 0
+            query = (
+                select(KeywordsModel)
+                .join(LinksModel.keywords)
+                .filter(KeywordsModel.keyword == keyword)
+            )
+            result = await session.execute(query)
+            keywords = result.scalars().all()
+            return len(keywords) > 0
 
     # async def add_gif(self, gif: str, user: Optional[discord.User], weight: int = 5):
     #     async with self.database_service.session() as session:

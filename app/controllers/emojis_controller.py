@@ -17,14 +17,14 @@ class EmojisController:
 
     async def is_keyword_in_model(self, keyword: str) -> bool:
         async with self.database_service.session() as session:
-            async with session.begin():
-                query = (
-                    session.query(EmojisModel.keywords)
-                    .join(EmojisModel.keywords)
-                    .filter(KeywordsModel.keyword == keyword)
-                )
-                result = await query.all()
-                return len(result) > 0
+            query = (
+                select(KeywordsModel)
+                .join(EmojisModel.keywords)
+                .filter(KeywordsModel.keyword == keyword)
+            )
+            result = await session.execute(query)
+            keywords = result.scalars().all()
+            return len(keywords) > 0
 
     async def get_all_links_by_keyword(self, keyword: str) -> List[EmojisModel]:
         async with self.database_service.session() as session:
