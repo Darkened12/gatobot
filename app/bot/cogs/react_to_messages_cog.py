@@ -52,13 +52,18 @@ class ReactToMessagesCog(discord.Cog):
 
     async def _react_to_mention(self, message: discord.Message):
         if self.cooldown_service_users.can_execute(message.author.id):
-            await self._action_chooser(message, random.choice(self.keywords))
+            logger.info(f'Cooldown service [users]: added new instance "{message.author.id}".')
+            return await self._action_chooser(message, random.choice(self.keywords))
+        return logger.warn(f'Cooldown service [users]: still in cooldown - "{message.author.id}".')
 
     async def _react_to_message(self, message: discord.Message):
         for word in message.content.split():
             for keyword in self.keywords:
-                if word.lower() == keyword and self.cooldown_service_reactions.can_execute(keyword):
-                    return await self._action_chooser(message, keyword)
+                if word.lower() == keyword:
+                    if self.cooldown_service_reactions.can_execute(keyword):
+                        logger.info(f'Cooldown service [reactions]: added new instance "{keyword}".')
+                        return await self._action_chooser(message, keyword)
+                    return logger.warn(f'Cooldown service [reactions]: still in cooldown - "{keyword}".')
 
     async def _action_chooser(self, message: discord.Message, keyword: str):
         actions = ['action1', 'action2']
