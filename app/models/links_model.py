@@ -13,7 +13,7 @@ class LinksModel(Base):
         return f'{self.url}'
 
     id = Column(Integer, primary_key=True)
-    keywords = relationship('KeywordsModel', secondary=LinksKeywordsAssociation, back_populates='keywords')
+    keywords = relationship('KeywordsModel', secondary=LinksKeywordsAssociation, back_populates='links')
     link_name = Column(String, default='unknown-link', server_default='unknown-link')
     url = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.now(), server_default=sqlalchemy.func.current_timestamp(),

@@ -20,5 +20,5 @@ class KeywordsModel(Base):
                         nullable=False)
     created_by_user_id = Column(BigInteger, default=243332147379830785,
                                 server_default=sqlalchemy.text('243332147379830785'), nullable=False)
-    links = relationship('LinksModel', secondary=LinksKeywordsAssociation, back_populates='links')
-    emojis = relationship('EmojisModel', secondary=EmojisKeywordsAssociation, back_populates='emojis')
+    links = relationship('LinksModel', secondary=LinksKeywordsAssociation, back_populates='keywords')
+    emojis = relationship('EmojisModel', secondary=EmojisKeywordsAssociation, back_populates='keywords')

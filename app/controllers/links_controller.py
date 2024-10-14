@@ -2,7 +2,7 @@ import discord
 import time
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, insert
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 
@@ -87,10 +87,13 @@ class LinksController:
     async def link_url_to_keyword(self, url: str, keyword: str):
         async with self.database_service.session() as session:
             async with session.begin():
-                link_id: int = await session.query(LinksModel.id). \
-                    filter(LinksModel.emoji_name == url).scalars().first()
+                link_id_result = await session.execute(
+                    select(LinksModel.id).filter(LinksModel.url == url)
+                )
+                link_id = link_id_result.scalars().first()
                 keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
-                session.add(LinksKeywordsAssociation(keyword_id=keyword_id, emoji_id=link_id))
+                stmt = insert(LinksKeywordsAssociation).values(keyword_id=keyword_id, link_id=link_id)
+                await session.execute(stmt)
                 await session.commit()
 
 

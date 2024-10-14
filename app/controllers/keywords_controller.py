@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy import func
+from sqlalchemy.future import select
 
 from app.models.keywords_model import KeywordsModel
 from app.services.database_service import DatabaseService
@@ -13,8 +14,10 @@ class KeywordsController:
     async def get_id_by_keyword(self, keyword: str) -> int:
         async with self.database.session() as session:
             async with session.begin():
-                keyword_record: KeywordsModel = await session.query(KeywordsModel). \
-                    filter(KeywordsModel.keyword == keyword).first()
+                keyword_result = await session.execute(
+                    select(KeywordsModel.id).filter(KeywordsModel.keyword == keyword)
+                )
+                keyword_record = keyword_result.scalars().first()
                 return keyword_record
 
     async def get_all_keywords(self) -> List[str]:

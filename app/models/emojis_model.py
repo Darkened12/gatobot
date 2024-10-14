@@ -13,7 +13,7 @@ class EmojisModel(Base):
         return f'{self.url}'
 
     id = Column(Integer, primary_key=True)
-    keywords = relationship('KeywordsModel', secondary=EmojisKeywordsAssociation, back_populates='keywords')
+    keywords = relationship('KeywordsModel', secondary=EmojisKeywordsAssociation, back_populates='emojis')
     emoji_name = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.now(), server_default=sqlalchemy.func.current_timestamp(),
                         nullable=False)

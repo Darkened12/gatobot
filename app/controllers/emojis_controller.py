@@ -1,5 +1,6 @@
 from typing import List
-from sqlalchemy import func
+from sqlalchemy import func, insert
+from sqlalchemy.future import select
 
 from app.models.emojis_keywords_association_model import EmojisKeywordsAssociation
 from app.models.emojis_model import EmojisModel
@@ -64,9 +65,11 @@ class EmojisController:
     async def link_emoji_to_keyword(self, emoji: str, keyword: str):
         async with self.database_service.session() as session:
             async with session.begin():
-                emoji_id: int = await session.query(EmojisModel.id).\
-                    filter(EmojisModel.emoji_name == emoji).scalars().first()
+                emoji_id_result = await session.execute(
+                    select(EmojisModel.id).filter(EmojisModel.emoji_name == emoji)
+                )
+                emoji_id = emoji_id_result.scalars().first()
                 keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
-                session.add(EmojisKeywordsAssociation(keyword_id=keyword_id, emoji_id=emoji_id))
+                stmt = insert(EmojisKeywordsAssociation).values(keyword_id=keyword_id, emoji_id=emoji_id)
+                await session.execute(stmt)
                 await session.commit()
-
