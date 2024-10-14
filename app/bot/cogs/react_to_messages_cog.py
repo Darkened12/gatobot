@@ -21,7 +21,7 @@ class ReactToMessagesCog(discord.Cog):
         self.links_controller = links_controller
         self.cooldown_service_reactions = CooldownService(120)
         self.cooldown_service_users = CooldownService(15)
-        self.allowed_channels = [channel for channel in CHANNELS]
+        self.allowed_channels = [channel.id for channel in CHANNELS]
         self.keywords: List[str] = []
 
     @commands.Cog.listener()
