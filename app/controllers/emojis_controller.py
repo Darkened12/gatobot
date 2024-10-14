@@ -1,6 +1,7 @@
 from typing import List
 from sqlalchemy import func, insert
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 from app.models.emojis_keywords_association_model import EmojisKeywordsAssociation
 from app.models.emojis_model import EmojisModel
@@ -41,15 +42,17 @@ class EmojisController:
     async def get_random_emoji_by_keyword(self, keyword: str) -> EmojisModel:
         async with self.database_service.session() as session:
             query = (
-                session.query(EmojisModel)
+                select(EmojisModel)
+                .options(joinedload(EmojisModel.keywords))
                 .join(EmojisModel.keywords)
                 .filter(KeywordsModel.keyword == keyword)
                 .order_by(func.random())
             )
-            result = await query.first()
-            if not result:
-                raise ValueError(f"No links found for keyword: {keyword}")
-            return result
+            result = await session.execute(query)
+            emoji = result.scalars().first()
+            if not emoji:
+                raise ValueError(f"No emojis found for keyword: {keyword}")
+            return emoji
 
     async def add_emoji(self, emoji: str, keyword: str = None):
         async with self.database_service.session() as session:

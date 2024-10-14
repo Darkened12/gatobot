@@ -23,8 +23,8 @@ class KeywordsController:
     async def get_all_keywords(self) -> List[str]:
         async with self.database.session() as session:
             async with session.begin():
-                query = session.query(KeywordsModel.keyword)
-                return await query.scalars.all()
+                query = await session.execute(select(KeywordsModel.keyword))
+                return query.scalars().all()
 
     async def get_random_keyword(self) -> str:
         async with self.database.session() as session:

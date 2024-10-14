@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import func, insert
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.orm import joinedload
 
 from app.controllers.keywords_controller import KeywordsController
 from app.models.keywords_model import KeywordsModel
@@ -62,15 +63,17 @@ class LinksController:
     async def get_random_link_by_keyword(self, keyword: str) -> LinksModel:
         async with self.database_service.session() as session:
             query = (
-                session.query(LinksModel)
+                select(LinksModel)
+                .options(joinedload(LinksModel.keywords))
                 .join(LinksModel.keywords)
                 .filter(KeywordsModel.keyword == keyword)
                 .order_by(func.random())
             )
-            result = await query.first()
-            if not result:
+            result = await session.execute(query)
+            link = result.scalars().first()
+            if not link:
                 raise ValueError(f"No links found for keyword: {keyword}")
-            return result
+            return link
 
     async def add_link(self, url: str, keyword: str = None):
         if is_valid_url(url):
