@@ -1,14 +1,17 @@
 from typing import List
 from sqlalchemy import func
 
+from app.models.emojis_keywords_association_model import EmojisKeywordsAssociation
 from app.models.emojis_model import EmojisModel
 from app.models.keywords_model import KeywordsModel
 from app.services.database_service import DatabaseService
+from .keywords_controller import KeywordsController
 
 
 class EmojisController:
     def __init__(self, database_service: DatabaseService):
         self.database_service = database_service
+        self.kw_controller = KeywordsController(database_service)
 
     async def is_keyword_in_model(self, keyword: str) -> bool:
         async with self.database_service.session() as session:
@@ -46,3 +49,24 @@ class EmojisController:
             if not result:
                 raise ValueError(f"No links found for keyword: {keyword}")
             return result
+
+    async def add_emoji(self, emoji: str, keyword: str = None):
+        async with self.database_service.session() as session:
+            async with session.begin():
+                new_emoji = EmojisModel(emoji_name=emoji)
+                session.add(new_emoji)
+                await session.commit()
+                if keyword is not None:
+                    keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
+                    session.add(EmojisKeywordsAssociation(keyword_id=keyword_id, emoji_id=new_emoji.id))
+                    await session.commit()
+
+    async def link_emoji_to_keyword(self, emoji: str, keyword: str):
+        async with self.database_service.session() as session:
+            async with session.begin():
+                emoji_id: int = await session.query(EmojisModel.id).\
+                    filter(EmojisModel.emoji_name == emoji).scalars().first()
+                keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
+                session.add(EmojisKeywordsAssociation(keyword_id=keyword_id, emoji_id=emoji_id))
+                await session.commit()
+

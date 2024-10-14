@@ -6,16 +6,19 @@ from sqlalchemy import func
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 
+from app.controllers.keywords_controller import KeywordsController
 from app.models.keywords_model import KeywordsModel
 from app.models.links_model import LinksModel
 from app.models.links_keywords_association_model import LinksKeywordsAssociation
 from app.services.database_service import DatabaseService
+from app.services.url_checker_service import is_valid_url
 from typing import Optional, List
 
 
 class LinksController:
     def __init__(self, database_service: DatabaseService):
         self.database_service = database_service
+        self.kw_controller = KeywordsController(database_service)
 
     async def is_keyword_in_model(self, keyword: str) -> bool:
         async with self.database_service.session() as session:
@@ -68,6 +71,27 @@ class LinksController:
             if not result:
                 raise ValueError(f"No links found for keyword: {keyword}")
             return result
+
+    async def add_link(self, url: str, keyword: str = None):
+        if is_valid_url(url):
+            async with self.database_service.session() as session:
+                async with session.begin():
+                    new_link = LinksModel(url=url)
+                    session.add(new_link)
+                    await session.commit()
+                    if keyword is not None:
+                        keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
+                        session.add(LinksKeywordsAssociation(keyword_id=keyword_id, emoji_id=new_link.id))
+                        await session.commit()
+
+    async def link_url_to_keyword(self, url: str, keyword: str):
+        async with self.database_service.session() as session:
+            async with session.begin():
+                link_id: int = await session.query(LinksModel.id). \
+                    filter(LinksModel.emoji_name == url).scalars().first()
+                keyword_id = await self.kw_controller.get_id_by_keyword(keyword)
+                session.add(LinksKeywordsAssociation(keyword_id=keyword_id, emoji_id=link_id))
+                await session.commit()
 
 
 class AlreadyExistsError(Exception):
