@@ -2,6 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv as __load_dotenv
 
+from app.bot.cogs.message_sender_cog import MessageSenderCog
 from app.services.database_service import DatabaseService
 
 from app.controllers.links_controller import LinksController
@@ -23,8 +24,7 @@ bot = discord.Bot(intents=__intents, owner_id=int(os.environ.get('OWNER_ID')))
 __database = DatabaseService(dsn_connector='sqlite+aiosqlite:///', dsn=os.environ.get('DATABASE'))
 __controller = LinksController(__database)
 
-# bot.add_cog(ListenersCog(bot, __controller))
-# bot.add_cog(CommandsCog(bot, __controller))
+bot.add_cog(MessageSenderCog(bot))
 bot.add_cog(ReactToMessagesCog(
     bot=bot,
     keywords_controller=KeywordsController(__database),
