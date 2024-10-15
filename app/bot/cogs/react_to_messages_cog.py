@@ -90,7 +90,7 @@ class ReactToMessagesCog(discord.Cog):
                 link = await self.links_controller.get_random_link_by_keyword(keyword)
             except ValueError:
                 return
-            await asyncio.sleep(1)
+            await asyncio.sleep(2)
             await message.reply(link.url, mention_author=False)
             return logger.info(f'triggered keyword reaction "{keyword}" on "{message.channel.name}" channel'
                                f' on message "{message.content}".')
