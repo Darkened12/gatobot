@@ -3,7 +3,7 @@ import discord
 import asyncio
 from discord.ext import commands
 from typing import Union, List
-from app.bot.channels import CHANNELS
+from app.models.channels_dataset import CHANNELS
 from app.controllers.emojis_controller import EmojisController
 from app.controllers.keywords_controller import KeywordsController
 from app.controllers.links_controller import LinksController

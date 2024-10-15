@@ -2,7 +2,7 @@ import asyncio
 import discord
 from discord.ext import commands
 from datetime import datetime
-from app.bot.channels import CHANNELS, ChannelsModel
+from app.models.channels_dataset import CHANNELS, ChannelsModel
 
 from app.services.logging_service import logger
 from app.controllers.links_controller import LinksController
