@@ -60,13 +60,25 @@ class MessageSenderCog(discord.Cog):
 
     async def _send_emote(self, message: discord.Message, keyword: str):
         if self.cooldown_message_service.can_execute('keyword'):
-            return await message.channel.send(self.emotes[keyword])
+            logger.info(f'Cooldown service [messages]: added new instance "{keyword}" from message "{message.content}".')
+            emote = self.emotes[keyword]
+            await message.channel.send(emote)
+            return logger.info(f'Cog "{self.__cog_name__}": sent emote "{emote}" in response to message '
+                               f'"{message.content}" on channel "{message.channel.name}".')
+        return logger.warn(f'Cooldown service [messages]: still in cooldown - "{keyword}": tried message '
+                           f'"{message.content}".')
 
     def _get_happiness_from_message(self, message: discord.Message) -> Optional[str]:
         for word in message.content.split():
             if word.lower() in FELIZ.sets:
+                old_happiness = self.cat.happiness_level
                 self.cat.make_happy()
+                logger.warn(f'CatHappiness went up - before: "{old_happiness}", now: "{self.cat.happiness_level}", '
+                            f'trigger: "{word}".')
                 return 'happy'
             if word.lower() in TRISTE.sets:
+                old_happiness = self.cat.happiness_level
                 self.cat.make_sad()
+                logger.warn(f'CatHappiness went down - before: "{old_happiness}", now: "{self.cat.happiness_level}"'
+                            f', trigger: "{word}".')
                 return 'sad'
