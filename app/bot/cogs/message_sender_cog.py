@@ -19,6 +19,7 @@ class MessageSenderCog(discord.Cog):
         self.cat = CatHappiness()
         self.emotes = {'happy': '<:gato:1180027630871904276>',
                        'sad': '<:gatodespair:1280387632492449946>'}
+        self.allowed_channels = [channel.id for channel in CHANNELS]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -40,7 +41,7 @@ class MessageSenderCog(discord.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if self.bot.is_ready():
+        if self.bot.is_ready() and message.channel.id in self.allowed_channels:
             happiness = self._get_happiness_from_message(message)
             if happiness is not None:
                 return await self._send_emote(message, happiness)
@@ -58,7 +59,8 @@ class MessageSenderCog(discord.Cog):
             self._get_happiness_from_message(message)
 
     async def _send_emote(self, message: discord.Message, keyword: str):
-        return await message.channel.send(self.emotes[keyword])
+        if self.cooldown_message_service.can_execute('keyword'):
+            return await message.channel.send(self.emotes[keyword])
 
     def _get_happiness_from_message(self, message: discord.Message) -> Optional[str]:
         for word in message.content.split():
