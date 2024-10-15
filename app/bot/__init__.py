@@ -23,10 +23,14 @@ bot = discord.Bot(intents=__intents, owner_id=int(os.environ.get('OWNER_ID')))
 __database = DatabaseService(dsn_connector='sqlite+aiosqlite:///', dsn=os.environ.get('DATABASE'))
 __controller = LinksController(__database)
 
-bot.add_cog(MessageSenderCog(bot))
-bot.add_cog(ReactToMessagesCog(
+__react_to_messages_cog = ReactToMessagesCog(
     bot=bot,
     keywords_controller=KeywordsController(__database),
     emoji_controller=EmojisController(__database),
     links_controller=LinksController(__database),
-))
+)
+
+bot.add_cog(__react_to_messages_cog)
+bot.add_cog(CommandsCog(bot, __react_to_messages_cog))
+bot.add_cog(MessageSenderCog(bot))
+
