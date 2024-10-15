@@ -9,7 +9,6 @@ from app.controllers.links_controller import LinksController
 from app.controllers.keywords_controller import KeywordsController
 from app.controllers.emojis_controller import EmojisController
 
-from app.bot.cogs.listeners_cog import ListenersCog
 from app.bot.cogs.react_to_messages_cog import ReactToMessagesCog
 from app.bot.cogs.commands_cog import CommandsCog
 
