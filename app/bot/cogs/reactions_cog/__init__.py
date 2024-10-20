@@ -26,10 +26,11 @@ class ReactionsCog(discord.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        logger.info(f'cog "{self.__cog_name__}" starting...')
         await self.database.init()
-        logger.info(f'Database is ready.')
+        logger.info(f'Database is ready!')
         self.keywords = await self.kw_controller.get_all_keywords()
-        logger.info(f'cog "{self.__cog_name__}" ready.')
+        logger.info(f'cog "{self.__cog_name__}" ready!')
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

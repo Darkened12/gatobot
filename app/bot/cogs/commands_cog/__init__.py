@@ -16,7 +16,7 @@ class CommandsCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info(f'Cog "{self.__cog_name__}" ready at "{datetime.now()}".')
+        logger.info(f'Cog "{self.__cog_name__}" ready!.')
 
     @keyword_group.command(name='refresh')
     @commands.is_owner()

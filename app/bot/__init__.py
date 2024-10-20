@@ -5,6 +5,8 @@ from dotenv import load_dotenv as __load_dotenv
 from app.bot.cogs.messages_cog import MessagesCog
 from app.bot.cogs.reactions_cog import ReactionsCog
 from app.bot.cogs.commands_cog import CommandsCog
+from app.bot.cogs.happiness_cog import HappinessCog
+from app.bot.cogs.scheduler_cog import SchedulerCog
 
 from app.services.database_service import DatabaseService
 
@@ -33,4 +35,5 @@ __react_to_messages_cog = ReactionsCog(
 bot.add_cog(__react_to_messages_cog)
 bot.add_cog(CommandsCog(bot, __react_to_messages_cog))
 bot.add_cog(MessagesCog(bot))
-
+bot.add_cog(HappinessCog(bot))
+bot.add_cog(SchedulerCog(bot))
