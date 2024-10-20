@@ -3,12 +3,12 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 from datetime import datetime
 
-from app.bot import ReactToMessagesCog
+from app.bot import ReactionsCog
 from app.services.logging_service import logger
 
 
 class CommandsCog(commands.Cog):
-    def __init__(self, bot: discord.Bot, react_to_messages_cog: ReactToMessagesCog):
+    def __init__(self, bot: discord.Bot, react_to_messages_cog: ReactionsCog):
         self.bot = bot
         self.react_to_messages_cog = react_to_messages_cog
 

@@ -11,7 +11,7 @@ from app.services.logging_service import logger
 from app.services.cooldown_service import CooldownService
 
 
-class ReactToMessagesCog(discord.Cog):
+class ReactionsCog(discord.Cog):
     def __init__(self, bot: discord.Bot, keywords_controller: KeywordsController,
                  emoji_controller: EmojisController, links_controller: LinksController):
         self.bot = bot

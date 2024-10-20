@@ -12,7 +12,7 @@ from app.bot.cat_happiness import CatHappiness
 from app.services.logging_service import logger
 
 
-class MessageSenderCog(discord.Cog):
+class MessagesCog(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.bot = bot
         self.cooldown_message_service = CooldownService(240)
