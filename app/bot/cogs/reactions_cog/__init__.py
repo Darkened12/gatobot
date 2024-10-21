@@ -27,7 +27,7 @@ class ReactionsCog(discord.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if event_is_valid_to_run(message, self.bot):
+        if event_is_valid_to_run(message, self.bot) and message.channel.id in self.allowed_channels:
             return await self._process_message(message)
 
     async def _process_message(self, message: discord.Message):
