@@ -1,16 +1,15 @@
 import discord
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
-from datetime import datetime
 
-from app.bot import ReactionsCog
+from app.bot import MessagesCog
 from app.services.logging_service import logger
 
 
 class CommandsCog(commands.Cog):
-    def __init__(self, bot: discord.Bot, react_to_messages_cog: ReactionsCog):
+    def __init__(self, bot: discord.Bot, messages_cog: MessagesCog):
         self.bot = bot
-        self.react_to_messages_cog = react_to_messages_cog
+        self.messages_cog = messages_cog
 
     keyword_group = SlashCommandGroup('keywords', 'gato')
 
@@ -21,7 +20,7 @@ class CommandsCog(commands.Cog):
     @keyword_group.command(name='refresh')
     @commands.is_owner()
     async def refresh_keywords(self, ctx: discord.ApplicationContext):
-        self.react_to_messages_cog.keywords = await self.react_to_messages_cog.kw_controller.get_all_keywords()
+        self.messages_cog.keywords = await self.messages_cog.kw_controller.get_all_keywords()
         logger.info(f'"{self.__cog_name__}": user "{ctx.author.display_name}" used the command "keyword refresh".')
         return await ctx.respond('<:gato:1180027630871904276>', ephemeral=True)
 

@@ -3,14 +3,16 @@ import asyncio
 import discord
 from discord.ext import commands
 
+from app.bot import HappinessCog
 from app.models.channels_dataset import CHANNELS
 from app.services import parallel_task_runner_service
 from app.services.logging_service import logger
 
 
 class SchedulerCog(commands.Cog):
-    def __init__(self, bot: discord.Bot):
+    def __init__(self, bot: discord.Bot, cat_happiness_cog: HappinessCog):
         self.bot = bot
+        self.cat = cat_happiness_cog.cat
 
     @commands.Cog.listener()
     async def on_ready(self):
