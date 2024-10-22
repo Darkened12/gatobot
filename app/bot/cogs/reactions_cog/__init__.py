@@ -6,7 +6,6 @@ from typing import Union, List
 
 from app.bot.cogs.happiness_cog import HappinessCog
 from app.controllers.emojis_controller import EmojisController
-from app.controllers.keywords_controller import KeywordsController
 from app.ext import event_is_valid_to_run
 from app.models.channels_dataset import CHANNELS
 from app.models.emotional_keywords_dataset import FELIZ, TRISTE
