@@ -1,6 +1,12 @@
 .idea/
+.github/
 .env
 *.db
+
+Dockerfile
+.dockerignore
+Procfile
+fly.toml
 
 /*.py
 !main.py
