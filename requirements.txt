@@ -1,3 +1,4 @@
+py-cord==2.6.1
 SQLAlchemy==2.0.35
 alembic==1.13.3
 aiosqlite==0.20.0
