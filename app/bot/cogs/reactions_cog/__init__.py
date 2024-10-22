@@ -19,6 +19,7 @@ class ReactionsCog(discord.Cog):
         self.cat = cat_happiness_cog.cat
         self.emojis_controller = emojis_controller
         self.cooldown_users_service = CooldownService(15)
+        self.cooldown_reactions_service = CooldownService(15)
         self.allowed_channels = [channel.id for channel in CHANNELS]
 
     @commands.Cog.listener()
@@ -45,9 +46,30 @@ class ReactionsCog(discord.Cog):
         if reaction.message.channel.id in self.allowed_channels and not reaction.burst:
             try:
                 if reaction.emoji.id in [1280387632492449946, 1180027630871904276]:
+                    if not self.cooldown_reactions_service.can_execute(reaction.emoji):
+                        return logger.warn(f'"{self.__cog_name__}" - Cooldown service [reactions] - reaction '
+                                           f'"{reaction.emoji}" still in cooldown.')
+
+                    logger.info(f'"{self.__cog_name__}" - Cooldown service [reactions] - added new instance: '
+                                f'"{reaction.emoji}".')
                     await reaction.message.add_reaction(reaction.emoji)
-                    return logger.info(f'added reaction "{reaction.emoji}" on "{reaction.message.channel.name}" channel'
+                    return logger.info(f'"{self.__cog_name__}" - user "{user.display_name}": added reaction '
+                                       f'"{reaction.emoji}" on "{reaction.message.channel.name}" channel'
                                        f' on message "{reaction.message.content}".')
+            except AttributeError:
+                pass
+
+    @commands.Cog.listener()
+    async def on_reaction_remove(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
+        if reaction.message.channel.id in self.allowed_channels and not reaction.burst:
+            try:
+                if reaction.emoji.id in [1280387632492449946, 1180027630871904276]:
+                    if len(reaction.message.reactions) == 1:
+                        await reaction.message.remove_reaction(reaction.emoji, self.bot.user)
+                        return logger.info(f'"{self.__cog_name__}": removed reaction "{reaction.emoji}"'
+                                           f' on "{reaction.message.channel.name}" channel'
+                                           f' on message "{reaction.message.content}" because of user'
+                                           f' "{user.display_name}".')
             except AttributeError:
                 pass
 

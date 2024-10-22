@@ -17,6 +17,7 @@ from app.controllers.emojis_controller import EmojisController
 
 __load_dotenv()
 __intents = discord.Intents.default()
+__intents.members = True
 __intents.messages = True
 __intents.message_content = True
 __intents.reactions = True
